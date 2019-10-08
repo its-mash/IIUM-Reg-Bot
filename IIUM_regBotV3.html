@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <style media="screen">
+    body{
+      background-color: #e2dbd3;
+      font-family: monospace;
+      font-size: 18px;
+    }
+    #time{
+      position: absolute;
+      left: 20px;
+      top:0px;
+      color: #4c4848;
+      font-weight: bold;
+    }
+    .container{
+        margin: 70px auto 20px auto;
+    }
+    .frame{
+      position: absolute;
+      width:400px;
+      height: 27px;
+      border:none;
+      text-align: left;
+      top:-30%;
+      color:red;
+    }	
+    iframe{
+	overflow: hidden;
+    }
+    .container{
+      text-align: center;
+      padding: 100px;
+      background-color: #2d98af;
+      border-radius: 50%;
+      transition:  10s;
+    }
+    ul{
+      list-style-type: none;
+      position: relative;
+    }
+    ul li{
+      position: relative;
+      margin: 20px auto;
+    }
+    .cInput{
+      width: 100px;
+      border-radius: 5px;
+      height: 20px;
+      text-align: center;
+      background-color: #d5dbe5;
+    }
+    .sInput{
+      width: 50px;
+      height: 20px;
+      text-align: center;
+      border-radius: 5px;
+      background-color: #d5dbe5;
+      overflow: hidden;
+    }
+    .ll{
+      font-size: 18px;
+      margin: 4px;
+      text-align: center;
+      border-radius: 5px;
+      background-color: #d5dbe5;
+      overflow: hidden;
+    }
+    .btn{
+      display: inline-block;
+      background-color: #bc718f;
+      padding: 10px 20px;
+      font-size: 25px;
+      border-radius: 10px;
+      margin: 0px 40px;
+      transition: background-color .4s ease;
+      border-radius: 15px;
+      box-shadow: 2px 2px #999;
+    }
+    .btn:hover{
+      background-color: #f44f2e;
+      cursor:pointer;
+    }
+    li{
+      position: absolute;
+      left: -5%;
+    }
+    .tInputBox{
+      position: absolute;
+      left:45%;
+      width: 700px;
+      top:100px;
+    }
+    #update{
+      background-color: #68cc5f;
+      border-radius: 3px;
+      padding: 5px 10px;
+    }
+    #update:hover{
+      cursor: pointer;
+    }
+    #remain{
+      position: absolute;
+      left: 20px;
+      top:0px;
+      color: #4c4848;
+      font-weight: bold;
+    }
+    #toTime{
+      margin-left: -15%;
+      padding: 5px 10px;
+      border-radius: 3px;
+      background-color: #d9e2e2;
+      font-size: 18px;
+      outline: none;
+    }
+    #dd{
+      display: none;
+    }
+    #remain{
+      position: relative;
+      right: 20px;
+      top:0px;
+      color: #4c4848;
+      font-weight: bold;
+    }
+    h1{
+      text-align: center;
+    }
+    .exe{
+      display: inline-block;
+    }
+    #hlp{
+      position: absolute;
+      left: 24%;
+      top:112px;
+    }
+  </style>
+</head>  
+<body>
+  <h1>IIUM regBot</h1>
+  <iframe id="dd" name="hframe"></iframe>
+  <div class="exe">
+    <p id="time"></p>
+    <span id="hlp">when to execute?</span>
+    <div class="tInputBox">
+	<input id="toTime" class="tInput" type="datetime-local" value="2017-04-20T00:00" min="2017-04-15T07:00" max="2017-05-30T16:00">
+	  <span id="update" onclick="update()">Auto Execute</span>
+      <span id="update" onclick="update()"><a href="http://prereg1.iium.edu.my/ora6.php?&toggle_sem=1" target="_blank">Change Sem</a></span>
+      <span id="remain"></span>
+    </div>
+  </div>
+  <div class="container">
+    &#169 2016 <a href="https://www.facebook.com/aka.stdLn" target="-_blank" style="">Ashik</a><br><br>
+    <div id="loginBox">
+	<form action="http://prereg1.iium.edu.my/ora6.php?" method="post" name="form1" id="lform" target="hframe">
+    Matric No: <input id ="username" class="ll" type="text" name="mat" value="YourMatricNo"><br/>
+    Password : <input id="password" class="ll" type="password" name="pin" value="YourPassWord">
+	</form>
+    </div>
+    <div id="courseBox">
+      <ul id="courseList">
+	    
+		<li>Course Code : <input class="cInput" type="text" name="" value="LQ 0208"> Section : <input class="sInput" type="text" name="" placeholder="1" value="1"> <iframe scrolling="no" class="frame"></iframe></li>
+	
+      </ul>
+    </div>
+    <div class="buttons">
+      <span class="btn" style="font-size:20px;"onclick="newSubject()">+</span>
+      <span class="btn" name="button" onclick="submit()">Submit</span>
+      <span class="btn" style="font-size:20px;"onclick="remove()">-</span>
+    </div>
+  </div>
+<script>
+   var attempt=0,interval;
+   var url="http://prereg1.iium.edu.my/";
+   window.open(url);
+   function sleep(milliseconds) {
+   var start = new Date().getTime();
+		for (var i = 0; i < 1e7; i++) {
+			if ((new Date().getTime() - start) > milliseconds){
+				break;
+			}
+		}
+	}
+   function newSubject(){
+     var courseInput=document.createElement("input");
+     var courseText=document.createTextNode("Course Code : ");
+     var sectionInput=document.createElement("input");
+     var sectionText=document.createTextNode(" Section : ");
+     var frame=document.createElement("iframe");
+     frame.className="frame";
+     frame.scrolling="No";
+     courseInput.type="text";
+     sectionInput.type="text";
+     courseInput.className="cInput";
+     sectionInput.className="sInput";
+     var newli=document.createElement("li");
+     newli.appendChild(courseText);
+     newli.appendChild(courseInput);
+     newli.appendChild(sectionText);
+     newli.appendChild(sectionInput);
+     newli.appendChild(frame);
+     document.getElementById("courseList").appendChild(newli);
+   }
+   function wait(){
+
+   }
+   function addcourse(){
+   
+	  window.open(url,"hframe");
+	  
+      /*var username=document.getElementById("username").value;
+      var password=document.getElementById("password").value;
+      window.open(url+"ora6.php?&mat="+username+"&pin="+password,"hframe");*/
+	  document.getElementById("lform").submit();
+
+      var dd=setTimeout(wait,500);
+      var list=document.getElementsByTagName("li");
+      var frame=document.getElementsByTagName("iframe");
+      for(var i=0;i<list.length;i++){
+        var lnode=list[i].getElementsByTagName("input");
+        frame[i+1].src=url+"addcourse.php?&Course_code="+lnode[0].value.toUpperCase()+"&Section="+lnode[1].value;
+		ff = setTimeout(wait,100);
+      }
+      attempt++;
+      if(attempt>20){
+        attempt=0;
+        clearInterval(interval);
+		document.getElementById("lform").target="_blank";
+		document.getElementById("lform").submit();
+      }
+
+   }
+
+   function remove(){
+     var li=document.getElementsByTagName("li");
+     document.getElementById("courseList").removeChild(li[li.length-1]);
+   }
+   var sss=setInterval(showTime,500);
+   function showTime(){
+     var time=new Date().toLocaleDateString()+"<br>";
+     time+=new Date().toLocaleTimeString();
+     document.getElementById("time").innerHTML=time;
+   }
+   var toTime,exe;
+   function update(){
+     toTime=Date.parse(document.getElementById("toTime").value);
+     if(toTime > Date.now())
+        exe=setInterval(execute,500);
+   }
+   function execute(){
+     var now=Date.now();
+     var left=toTime-now-8*3600000;
+     remains(left);
+     if(left<=30000){
+		window.open(url);
+       loop();
+       document.getElementById("remain").innerHTML="0 h : 0 m : 0 s to execute";
+       clearInterval(exe);
+     }
+   }
+   function remains(left){
+     var str = " ";
+     left/=1000;
+     str+=Math.floor(left/3600)+" h : ";
+     left%=3600;
+     str+=Math.floor(left/60)+" m : ";
+     str+=Math.floor(left%60)+" s to execute!";
+     document.getElementById("remain").innerHTML=str;
+   }
+
+   function loop(){
+	interval=setInterval(addcourse,1000);
+	}
+	function submit(){
+	    //ff = setTimeout(wait,1000)
+		window.open(url);
+		loop();
+	}
+   //"CCCN 2561",Section:"1",
+
+</script>
+</body>
+</html>
